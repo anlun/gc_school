@@ -7,7 +7,7 @@ class SmartStringPointer {
 public:
 	SmartStringPointer() {
 		string str = "a" + to_string(count);
-		pointer = new String(str);
+		pointer = (string *) (int(new string(str)) + 1);
 		count++;
 	}
 
@@ -30,22 +30,20 @@ public:
 	}
 
 	void swap(SmartStringPointer& newValue) {
-		String* tmp = newValue.pointer;
+		string* tmp = newValue.pointer;
 		newValue.pointer = this->pointer;
 		this->pointer = tmp;
 	}
 
 	bool compare(const SmartStringPointer& ssp) {
-		String* thisPointer = this->getPointer();
-		// cout << hex << ssp.pointer      << endl;
-		// cout << hex << ssp.getPointer() << endl;
-		String* sspPointer  = ssp.getPointer();
+		string* thisPointer = this->getPointer();
+		string* sspPointer  = ssp.getPointer();
 
-		return thisPointer->compare(*sspPointer);
+		return (*thisPointer) < (*sspPointer);
 	}
 
 	string* getString() {
-		return getPointer()->getString();
+		return getPointer();
 	}
 
 private:
@@ -53,49 +51,28 @@ private:
 
 	void destructor() {
 		if (!isPointerUnique()) { return; }
-		delete pointer;
+		cout << "Destructor: " << *getPointer() << endl;
+		delete getPointer();
 	}
 
-	class String {
-	public:
-		String(const string& s) {
-			str = new string(s);
-		}
-
-		~String() {
-			//TODO: print smth
-			cout << "Destructor: " << *str << endl;
-			delete str;
-		}
-
-		bool compare(const String& str) {
-			return this->str < str.str;
-		}
-
-		string* getString() {
-			return str;
-		}
-
-	private:
-		string* str;
-	};
-
-	SmartStringPointer(const string& str): pointer(new String(str)) {
+	/*
+	SmartStringPointer(const string& str): pointer(new string(str) + 1) {
 	}
+	*/
 
 	bool isPointerUnique() {
-		return !((int) pointer & 0x1);
+		return (int) pointer & 0x1;
 	}
 
 	void makeNotUnique() {
-		pointer = (String *) ((int) pointer + 1);
+		pointer = getPointer();
 	}
 
-	String* getPointer() const {
-		return (String*) (int(pointer) & 0xfffffffe);
+	string* getPointer() const {
+		return (string*) (int(pointer) & 0xfffffffe);
 	}
 
-	String* pointer;
+	string* pointer;
 };
 int SmartStringPointer::count = 0;
 
