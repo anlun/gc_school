@@ -83,7 +83,7 @@ private:
 	}
 
 	bool isPointerUnique() {
-		return (((int) pointer) + 1) % 2;
+		return !((int) pointer & 0x1);
 	}
 
 	void makeNotUnique() {
@@ -91,7 +91,7 @@ private:
 	}
 
 	String* getPointer() const {
-		return (String*) ((int(pointer) >> 1) << 1);
+		return (String*) (int(pointer) & 0xfffffffe);
 	}
 
 	String* pointer;
