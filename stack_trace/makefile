@@ -1,2 +1,2 @@
 all:
-	gcc -g main.c -O0 -o test
+	gcc -O2 main.c -o test
