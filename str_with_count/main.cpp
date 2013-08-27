@@ -11,24 +11,20 @@ public:
 		count++;
 	}
 
-	/*
-	static SmartStringPointer* createStringPointer(const string& str) {
-		return new SmartStringPointer(str);
-	}
-	*/
-
 	~SmartStringPointer() {
-		if (!isPointerUnique()) { return; }
-		delete pointer;
+		destructor();
 	}
 
 	//TODO: copyring constructor
-	SmartStringPointer(SmartStringPointer& toCopy) {
+	SmartStringPointer(SmartStringPointer& toCopy) {		
+		destructor();
 		toCopy.makeNotUnique();
 		this->pointer = toCopy.pointer;
 	}
 
 	void operator =(SmartStringPointer& newValue) {
+		if (&newValue == this) { return; }
+		destructor();
 		newValue.makeNotUnique();
 		this->pointer = newValue.pointer;
 	}
@@ -54,6 +50,11 @@ public:
 
 private:
 	static int count;
+
+	void destructor() {
+		if (!isPointerUnique()) { return; }
+		delete pointer;
+	}
 
 	class String {
 	public:
