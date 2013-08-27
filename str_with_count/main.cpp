@@ -15,7 +15,6 @@ public:
 		destructor();
 	}
 
-	//TODO: copyring constructor
 	SmartStringPointer(SmartStringPointer& toCopy) {		
 		destructor();
 		toCopy.makeNotUnique();
@@ -55,11 +54,6 @@ private:
 		delete getPointer();
 	}
 
-	/*
-	SmartStringPointer(const string& str): pointer(new string(str) + 1) {
-	}
-	*/
-
 	bool isPointerUnique() {
 		return (int) pointer & 0x1;
 	}
@@ -86,23 +80,21 @@ void sort(SmartStringPointer* arr, int size) {
 	}
 }
 
+void print(SmartStringPointer* arr, int size) {
+	for (int i = 0; i < size; i++) {
+		cout << *(arr[i].getString()) << " ";
+	}
+	cout << endl;
+}
+
 int main() {
 	int size = 100;
 	SmartStringPointer* arr = new SmartStringPointer[size];
 
-	for (int i = 0; i < size; i++) {
-		cout << *(arr[i].getString()) << " ";
-	}
-	cout << endl;
-
+	print(arr, size);
 	sort(arr, size);
-
 	cout << "After sort." << endl;
-
-	for (int i = 0; i < size; i++) {
-		cout << *(arr[i].getString()) << " ";
-	}
-	cout << endl;
+	print(arr, size);
 
 	SmartStringPointer p;
 	for (int i = 0 ; i < size; i += 2) {
